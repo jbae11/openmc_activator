@@ -53,19 +53,50 @@ class OpenmcActivator:
                  material,
                  source_rate_list,
                  days_list,
-                 metric_list: list=['mass']
+                 metric_list: list=['mass'],
+                 split_irr=None,
+                 reduce_chain_level=5
                 ):
         # check material
         assert(material.volume) # cc
         density = material.get_mass_density() # g/cc
         mass = material.volume * material.density
 
+        if split_irr:
+            # to check
+            tot_days = sum(days_list)
+            tot_fluence = sum(np.array(days_list) * np.array(source_rate_list))
+            assert(isinstance(split_irr, int))
+            new_days_list = []
+            new_source_rate_list = []
+            for sr, day in zip(source_rate_list, days_list):
+                if sr == 0:
+                    new_source_rate_list.append(sr)
+                    new_days_list.append(day)
+                else:
+                    new_day = day / split_irr
+                    for i in range(split_irr):
+                        new_days_list.append(new_day)
+                        new_source_rate_list.append(sr)
+            
+            new_tot_days = sum(new_days_list)
+            new_fluence = sum(np.array(new_days_list) * np.array(new_source_rate_list))
+            assert(np.isclose(new_fluence, tot_fluence, rtol=1e-4)), print(new_fluence, tot_fluence)
+            assert(np.isclose(new_tot_days, tot_days, rtol=1e-4)), print(new_tot_days, tot_days)
+
+            days_list = new_days_list
+            source_rate_list = new_source_rate_list
+
 
         operator = openmc.deplete.IndependentOperator(
             materials=openmc.Materials([material]),
-            fluxes=[self.norm_flux*material.volume],
+            #fluxes=[self.norm_flux*material.volume],
+            fluxes=[material.volume],
+            # fluxes=[1],
             micros=[self.micro_xs],
-            normalization_mode='source-rate'
+            normalization_mode='source-rate',
+            reduce_chain=bool(reduce_chain_level),
+            reduce_chain_level=reduce_chain_level
         )
         integrator = openmc.deplete.PredictorIntegrator(
             operator=operator,
