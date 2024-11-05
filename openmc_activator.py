@@ -18,18 +18,20 @@ class OpenmcActivator:
 
         assert(len(ebins) == len(mg_flux)+1)
         self.ebins = np.array(ebins)
-        # check ascending
+        # check ascending (low to high)
         assert(np.all(ebins[:-1] < ebins[1:]))
         self.mg_flux = np.array(mg_flux)
 
         self.chain_file = self._resolve_file_path(openmc_chain_file, 'chain')
-
+        self.chain = openmc.deplete.Chain.from_xml(self.chain_file)
+        self.nuclides = [q.name for q in self.chain.nuclides]
         self.norm_flux = self.mg_flux / sum(self.mg_flux)
-        self.micro_xs = openmc.deplete.MicroXS.from_multi_group_flux(
+        self.micro_xs = openmc.deplete.MicroXS.from_multigroup_flux(
             energies=self.ebins,
-            multi_group_flux=list(self.norm_flux),
+            multigroup_flux=list(self.norm_flux),
             temperature=temperature,
-            chain_file=self.chain_file
+            chain_file=self.chain_file,
+            **{'output': False}
         )
 
 
@@ -52,15 +54,15 @@ class OpenmcActivator:
     def activate(self,
                  material,
                  source_rate_list,
-                 days_list,
+                 timesteps,
                  metric_list: list=['mass'],
                  split_irr=None,
-                 reduce_chain_level=5
+                 reduce_chain_level=5,
+                 timestep_units='d',
+                 result_path=None
                 ):
         # check material
         assert(material.volume) # cc
-        density = material.get_mass_density() # g/cc
-        mass = material.volume * material.density
 
         if split_irr:
             # to check
@@ -100,46 +102,67 @@ class OpenmcActivator:
         )
         integrator = openmc.deplete.PredictorIntegrator(
             operator=operator,
-            timesteps=days_list,
+            timesteps=timesteps,
             source_rates=source_rate_list,
-            timestep_units='d'
+            timestep_units=timestep_units
         )
 
-        #! something smart with tempfiles
-        integrator.integrate()
 
-        results = openmc.deplete.ResultsList.from_hdf5('depletion_results.h5')
+        # if result path is none, make a temp file that gets deleted after
+        if not result_path:
+            remove = True
+            # generate temporary filepath
+            tmpfile = 'tmp.h5'
+            while os.path.exists(tmpfile):
+                tmpfile = 't' + tmpfile
+            result_path = tmpfile
+        else:
+            remove = False
 
-        # get metrics
-        metric_dict = {metric: {'meta_days': [0] + list(days_list)} for metric in metric_list}
-        # add all the isos
-        tmp_mat = results[0].get_material(str(material.id))
-        nuclides = [nuc.name for nuc in tmp_mat.nuclides]
-        for metric in metric_list:
-            metric_dict[metric]['meta_total'] = []
-            for iso in nuclides:
-                metric_dict[metric][iso] = []
+        integrator.integrate(path=result_path, output=False)
 
-        for result in results:
-            mat = result.get_material(str(material.id))
-            if 'mass' in metric_dict:
-                tot = 0
-                for iso in nuclides:
-                    mass = mat.get_mass(iso)
-                    tot += mass
-                    metric_dict['mass'][iso].append(mass)
-                metric_dict['mass']['meta_total'].append(tot)
-            if 'decay_heat' in metric_dict:
+        return read_output(result_path, self.nuclides, metric_list, timesteps, material.id,
+                           timestep_units, remove)
+
+
+def read_output(output_path:str, nuclides, metric_list:list, timesteps:list, material_id:str,
+                timestep_units:str, remove:bool=False):
+
+    results = openmc.deplete.ResultsList.from_hdf5(output_path)
+
+    # get metrics
+    # time is cumulative time
+    metric_dict = {metric: {'meta_time_%s' %timestep_units: np.cumsum([0] + list(timesteps))} for metric in metric_list}
+    # add all the isos
+    tmp_mat = results[0].get_material(str(material_id))
+    for metric in metric_list:
+        metric_dict[metric]['meta_total'] = []
+        for iso in nuclides:
+            metric_dict[metric][iso] = []
+    for result in results:
+        mat = result.get_material(str(material_id))
+
+        for metric in metric_dict.keys():
+            if metric == 'mass':
+                td = {iso:mat.get_mass(iso) for iso in nuclides}
+            elif metric == 'atom':
+                td = mat.get_nuclide_atoms()
+            elif metric == 'decay_heat':
                 td = mat.get_decay_heat('W', by_nuclide=True)
-                for k,v in td.items():
-                    metric_dict['decay_heat'][k].append(v)
-                metric_dict['decay_heat']['meta_total'].append(sum(td.values()))
-
-            if 'activity' in metric_dict:
+            elif metric == 'activity':
                 td = mat.get_activity('Bq', by_nuclide=True)
-                for k,v in td.items():
-                    metric_dict['activity'][k].append(v)
-                metric_dict['activity']['meta_total'].append(sum(td.values()))
+            else:
+                raise ValueError('Invalid metric ' + metric)
+            
+            for iso in nuclides:
+                if iso not in td:
+                    metric_dict[metric][iso].append(0.0)
+                else:
+                    metric_dict[metric][iso].append(td[iso])
+            metric_dict[metric]['meta_total'].append(sum(td.values()))
 
-        return metric_dict
+    if remove:
+        os.remove(output_path)
+
+    return metric_dict
 
