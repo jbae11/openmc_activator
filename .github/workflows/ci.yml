@@ -22,5 +22,7 @@ jobs:
       - name: Conda info
         shell: bash -el {0}
         run: |
+            conda install -c conda-forge openmc jupyter
+            python -m pip install pypact
             jupyter nbconvert compare.ipynb --to python
             python compare.py
