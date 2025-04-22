@@ -12,9 +12,11 @@ jobs:
   run_notebook:
     name: 
     runs-on: "ubuntu-latest"
-    strategy:
-      fail-fast: false
     steps:
+
+      - name: checkout actions
+        uses: actions/checkout@v4
+
       - uses: conda-incubator/setup-miniconda@v3
         with:
           auto-update-conda: true
