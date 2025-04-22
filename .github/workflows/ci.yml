@@ -1,0 +1,26 @@
+name: CI testing
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  run_notebook:
+    name: 
+    runs-on: "ubuntu-latest"
+    strategy:
+      fail-fast: false
+    steps:
+      - uses: conda-incubator/setup-miniconda@v3
+        with:
+          auto-update-conda: true
+          python-version: 3.12
+      - name: Conda info
+        shell: bash -el {0}
+        run: |
+            jupyter nbconvert compare.ipynb --to python
+            python compare.py
