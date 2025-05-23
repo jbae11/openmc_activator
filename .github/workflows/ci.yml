@@ -10,7 +10,7 @@ on:
 
 jobs:
   run_notebook:
-    name: 
+    name: Run simulation notebook
     runs-on: "ubuntu-latest"
     steps:
 
@@ -27,5 +27,7 @@ jobs:
             conda install -c conda-forge "openmc>=0.15.2" jupyter
             python -m pip install pypact
             python download_fns_fusion_decay.py
+            mkdir -p ~/nuclear_data
+            wget -q -O - https://anl.box.com/shared/static/uhbxlrx7hvxqw27psymfbhi7bx7s6u6a.xz | tar -C ~/nuclear_data -xJ
             jupyter nbconvert compare.ipynb --to python
             python compare.py
