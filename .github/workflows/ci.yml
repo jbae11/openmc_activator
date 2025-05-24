@@ -1,0 +1,33 @@
+name: CI testing
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  run_notebook:
+    name: Run simulation notebook
+    runs-on: "ubuntu-latest"
+    steps:
+
+      - name: checkout actions
+        uses: actions/checkout@v4
+
+      - uses: conda-incubator/setup-miniconda@v3
+        with:
+          auto-update-conda: true
+          python-version: 3.12
+      - name: Conda info
+        shell: bash -el {0}
+        run: |
+            conda install -c conda-forge "openmc>=0.15.2" jupyter
+            python -m pip install pypact
+            python download_fns_fusion_decay.py
+            mkdir -p ~/nuclear_data
+            wget -q -O - https://anl.box.com/shared/static/uhbxlrx7hvxqw27psymfbhi7bx7s6u6a.xz | tar -C ~/nuclear_data -xJ
+            jupyter nbconvert compare.ipynb --to python
+            python compare.py
