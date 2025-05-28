@@ -58,7 +58,7 @@ class OpenmcActivator:
 
     def activate(self,
                  metric_list: list=['mass'],
-                ):
+                ) -> list[dict]:
 
         for entry in self.activation_data:
             material = entry['materials']
