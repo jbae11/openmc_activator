@@ -2,105 +2,59 @@ import numpy as np
 import openmc.deplete
 import openmc
 import os, tempfile
+from typing import Sequence
+import openmc.checkvalue as cv
+from openmc.deplete.microxs import _get_nuclides_with_data, _find_cross_sections, _resolve_chain_file_path
+from openmc.deplete import REACTION_MT, GROUP_STRUCTURES, Chain
 
+
+class ActivationDict(TypedDict):
+    materials: openmc.Materials
+    multigroup_fluxes: Sequence[float]
+    scores: list[float]
+    energy: Sequence[float] | str
+    source_rate: Sequence[float]
 
 class OpenmcActivator:
 
-
-    unit_dict = {'mass': 'grams', 
-                 'decay_heat': 'watts',
-                 'activity': 'becquerels',
-                  # 'gamma_spec': '1/s'
-                }
-
-    def __init__(self,ebins,mg_flux, temperature=294,
-                openmc_chain_file=None):
-
-        assert(len(ebins) == len(mg_flux)+1)
-        self.ebins = np.array(ebins)
-        # check ascending (low to high)
-        assert(np.all(ebins[:-1] < ebins[1:]))
-        self.mg_flux = np.array(mg_flux)
-
-        self.chain_file = self._resolve_file_path(openmc_chain_file, 'chain')
-        self.chain = openmc.deplete.Chain.from_xml(self.chain_file)
-        self.nuclides = [q.name for q in self.chain.nuclides]
-        self.norm_flux = self.mg_flux / sum(self.mg_flux)
-        self.micro_xs = openmc.deplete.MicroXS.from_multigroup_flux(
-            energies=self.ebins,
-            multigroup_flux=list(self.norm_flux),
-            temperature=temperature,
-            chain_file=self.chain_file,
-            **{'output': False}
-        )
-
-
-    def _resolve_file_path(self, fp, which):
-        key_dict = {'chain': 'chain_file',
-                    'xs_data': 'cross_sections'
-                    }
-        assert(which in key_dict), 'Invalid `which`'
-        key = key_dict[which]
-        if not fp:
-            if key in openmc.config:
-                return openmc.config[key]
-            else:
-                raise ValueError("Either provide filename or set openmc.config['%s']" %key)
-        else:
-            assert(os.path.exists(fp)), 'Filepath %s does not exist' %fp
-            return fp
-
+    def __init__(
+        self,
+        activation_data: Sequence[ActivationDict],
+        timestep_units: str = 's',
+        reduce_chain_level: int = 5,
+        chain_file: cv.PathLike | None = None,
+        nuclides: Sequence[str] | None = None,
+        reactions: Sequence[str] | None = None,       
+    ):
+        
+        self.activate_data = activation_data
+        self.timestep_units = timestep_units
+        self.reduce_chain_level = reduce_chain_level
+        self.chain_file = chain_file
+        self.nuclides = nuclides
+        self.reactions = reactions
+        
 
     def activate(self,
-                 material,
-                 source_rate_list,
-                 timesteps,
                  metric_list: list=['mass'],
-                 split_irr=None,
-                 reduce_chain_level=5,
-                 timestep_units='d',
-                 result_path=None
                 ):
-        # check material
-        assert(material.volume) # cc
 
-        operator = openmc.deplete.IndependentOperator(
-            materials=openmc.Materials([material]),
-            #fluxes=[self.norm_flux*material.volume],
-            fluxes=[material.volume],
-            # fluxes=[1],
-            micros=[self.micro_xs],
-            normalization_mode='source-rate',
-            reduce_chain=bool(reduce_chain_level),
-            reduce_chain_level=reduce_chain_level
-        )
-        integrator = openmc.deplete.PredictorIntegrator(
-            operator=operator,
-            timesteps=timesteps,
-            source_rates=source_rate_list,
-            timestep_units=timestep_units
-        )
+        cross_sections = _find_cross_sections(model=None)
+        nuclides_with_data = _get_nuclides_with_data(cross_sections)
+
+        # If no nuclides were specified, default to all nuclides from the chain
+        if not nuclides:
+            chain = Chain.from_xml(_resolve_chain_file_path(self.chain_file))
+            nuclides = chain.nuclides
+            nuclides = [nuc.name for nuc in nuclides]
 
 
-        # if result path is none, make a temp file that gets deleted after
-        if not result_path:
-            remove = True
-            # generate temporary filepath
-            tmpfile = 'tmp.h5'
-            while os.path.exists(tmpfile):
-                tmpfile = 't' + tmpfile
-            result_path = tmpfile
-        else:
-            remove = False
-
-        integrator.integrate(path=result_path, output=False)
-
-        return read_output(result_path, self.nuclides, metric_list, timesteps, material.id,
-                           timestep_units, remove)
+        return read_output(self.nuclides, metric_list, timesteps, material.id,
+                           self.timestep_units)
 
 
 def read_output(output_path:str, nuclides, metric_list:list, timesteps:list, material_id:str,
-                timestep_units:str, remove:bool=False):
+                timestep_units:str):
 
     results = openmc.deplete.ResultsList.from_hdf5(output_path)
 
