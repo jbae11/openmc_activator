@@ -1,0 +1,4 @@
+jupyter-book
+matplotlib
+numpy
+git+https://github.com/fispact/pypact

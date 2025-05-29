@@ -24,6 +24,7 @@ jobs:
       - name: Conda info
         shell: bash -el {0}
         run: |
+            cd docs
             conda install -c conda-forge "openmc>=0.15.2" jupyter
             python -m pip install git+https://github.com/fispact/pypact
             python download_fns_fusion_decay.py
