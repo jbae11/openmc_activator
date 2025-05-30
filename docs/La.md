@@ -1,4 +1,4 @@
-# La
+# La - lanthanum
 
 ## 2000exp_5min
 

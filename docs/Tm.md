@@ -1,4 +1,4 @@
-# Tm
+# Tm - thulium
 
 ## 2000exp_5min
 

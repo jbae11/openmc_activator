@@ -1,4 +1,4 @@
-# Yb
+# Yb - ytterbium
 
 ## 2000exp_5min
 

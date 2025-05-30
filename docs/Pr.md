@@ -1,4 +1,4 @@
-# Pr
+# Pr - praseodymium
 
 ## 2000exp_5min
 

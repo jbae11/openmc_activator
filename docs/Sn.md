@@ -1,4 +1,4 @@
-# Sn
+# Sn - tin
 
 ## 1996exp_7hour
 

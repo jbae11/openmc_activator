@@ -1,4 +1,4 @@
-# Sm
+# Sm - samarium
 
 ## 2000exp_5min
 

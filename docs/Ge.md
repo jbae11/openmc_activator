@@ -1,4 +1,4 @@
-# Ge
+# Ge - germanium
 
 ## 2000exp_5min
 

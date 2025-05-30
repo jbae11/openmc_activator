@@ -1,4 +1,4 @@
-# Cl
+# Cl - chlorine
 
 ## 2000exp_5min
 

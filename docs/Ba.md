@@ -1,4 +1,4 @@
-# Ba
+# Ba - barium
 
 ## 1996exp_7hour
 

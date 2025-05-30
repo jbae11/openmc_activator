@@ -1,4 +1,4 @@
-# Tb
+# Tb - terbium
 
 ## 2000exp_5min
 

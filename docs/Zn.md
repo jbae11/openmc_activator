@@ -1,4 +1,4 @@
-# Zn
+# Zn - zinc
 
 ## 2000exp_5min
 

@@ -1,4 +1,4 @@
-# Pd
+# Pd - palladium
 
 ## 2000exp_5min
 

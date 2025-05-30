@@ -1,4 +1,4 @@
-# Lu
+# Lu - lutetium
 
 ## 2000exp_5min
 

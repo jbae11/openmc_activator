@@ -1,4 +1,4 @@
-# Ta
+# Ta - tantalum
 
 ## 1996exp_7hour
 

@@ -1,4 +1,4 @@
-# Ni
+# Ni - nickel
 
 ## 1996exp_7hour
 

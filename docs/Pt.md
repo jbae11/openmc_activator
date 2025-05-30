@@ -1,4 +1,4 @@
-# Pt
+# Pt - platinum
 
 ## 2000exp_5min
 

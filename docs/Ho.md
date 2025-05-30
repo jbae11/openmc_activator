@@ -1,4 +1,4 @@
-# Ho
+# Ho - holmium
 
 ## 2000exp_5min
 

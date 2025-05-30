@@ -1,4 +1,4 @@
-# Ru
+# Ru - ruthenium
 
 ## 2000exp_5min
 

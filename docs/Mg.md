@@ -1,4 +1,4 @@
-# Mg
+# Mg - magnesium
 
 ## 2000exp_5min
 

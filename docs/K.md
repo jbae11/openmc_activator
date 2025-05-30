@@ -1,4 +1,4 @@
-# K
+# K - potassium
 
 ## 1996exp_7hour
 

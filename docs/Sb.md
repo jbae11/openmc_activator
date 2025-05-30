@@ -1,4 +1,4 @@
-# Sb
+# Sb - antimony
 
 ## 2000exp_5min
 

@@ -1,4 +1,4 @@
-# Cu
+# Cu - copper
 
 ## 1996exp_7hour
 

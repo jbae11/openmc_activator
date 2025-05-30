@@ -1,4 +1,4 @@
-# Rb
+# Rb - rubidium
 
 ## 2000exp_5min
 

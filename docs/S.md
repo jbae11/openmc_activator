@@ -1,4 +1,4 @@
-# S
+# S - sulphur
 
 ## 1996exp_7hour
 

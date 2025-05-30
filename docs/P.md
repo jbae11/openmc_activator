@@ -1,4 +1,4 @@
-# P
+# P - phosphorus
 
 ## 2000exp_5min
 

@@ -1,4 +1,4 @@
-# Ti
+# Ti - titanium
 
 ## 1996exp_7hour
 

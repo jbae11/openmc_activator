@@ -1,4 +1,4 @@
-# Gd
+# Gd - gadolinium
 
 ## 2000exp_5min
 

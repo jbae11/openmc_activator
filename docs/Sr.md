@@ -1,4 +1,4 @@
-# Sr
+# Sr - strontium
 
 ## 1996exp_7hour
 

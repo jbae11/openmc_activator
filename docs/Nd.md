@@ -1,4 +1,4 @@
-# Nd
+# Nd - neodymium
 
 ## 2000exp_5min
 

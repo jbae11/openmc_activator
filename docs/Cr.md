@@ -1,4 +1,4 @@
-# Cr
+# Cr - chromium
 
 ## 1996exp_7hour
 

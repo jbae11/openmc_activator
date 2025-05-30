@@ -1,4 +1,4 @@
-# Cd
+# Cd - cadmium
 
 ## 2000exp_5min
 

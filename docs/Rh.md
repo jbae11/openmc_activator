@@ -1,4 +1,4 @@
-# Rh
+# Rh - rhodium
 
 ## 2000exp_5min
 

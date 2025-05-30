@@ -1,4 +1,4 @@
-# Eu
+# Eu - europium
 
 ## 2000exp_5min
 

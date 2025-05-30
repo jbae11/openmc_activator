@@ -1,4 +1,4 @@
-# Zr
+# Zr - zirconium
 
 ## 1996exp_7hour
 

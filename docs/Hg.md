@@ -1,4 +1,4 @@
-# Hg
+# Hg - mercury
 
 ## 2000exp_5min
 

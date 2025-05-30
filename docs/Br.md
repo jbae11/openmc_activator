@@ -1,4 +1,4 @@
-# Br
+# Br - bromine
 
 ## 2000exp_5min
 

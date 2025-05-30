@@ -1,4 +1,4 @@
-# Na
+# Na - sodium
 
 ## 1996exp_7hour
 

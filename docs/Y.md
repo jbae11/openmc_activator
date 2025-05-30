@@ -1,4 +1,4 @@
-# Y
+# Y - yttrium
 
 ## 1996exp_7hour
 

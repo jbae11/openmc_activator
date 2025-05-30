@@ -1,4 +1,4 @@
-# Ga
+# Ga - gallium
 
 ## 2000exp_5min
 

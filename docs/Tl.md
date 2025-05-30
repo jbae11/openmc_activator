@@ -1,4 +1,4 @@
-# Tl
+# Tl - thallium
 
 ## 2000exp_5min
 

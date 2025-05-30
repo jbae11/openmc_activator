@@ -1,4 +1,4 @@
-# Te
+# Te - tellurium
 
 ## 2000exp_5min
 

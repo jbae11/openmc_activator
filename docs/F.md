@@ -1,4 +1,4 @@
-# F
+# F - fluorine
 
 ## 1996exp_5min
 

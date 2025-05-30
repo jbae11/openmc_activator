@@ -1,4 +1,4 @@
-# Dy
+# Dy - dysprosium
 
 ## 2000exp_5min
 

@@ -1,4 +1,4 @@
-# Os
+# Os - osmium
 
 ## 2000exp_5min
 

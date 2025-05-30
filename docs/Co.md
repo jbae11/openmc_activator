@@ -1,4 +1,4 @@
-# Co
+# Co - cobalt
 
 ## 1996exp_7hour
 

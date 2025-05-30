@@ -1,4 +1,4 @@
-# Mo
+# Mo - molybdenum
 
 ## 1996exp_7hour
 
