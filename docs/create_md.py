@@ -1,10 +1,6 @@
-# data = {
-#     'Os': ['2000exp_5min'],
-#     'Cd': ['2000exp_5min'],
-#     'NiCr': ['1996exp_7hour', '1996exp_5min', '2000exp_5min'],
-#     'Rb': ['2000exp_5min']
-# }
 from pathlib import Path
+from openmc.data import ELEMENT_SYMBOL
+element_names = {v: k for k, v in ELEMENT_SYMBOL.items()}
 
 here = Path('docs/fns')
 assert(here.exists()), 'fns folder does not seem to exist. Run `download_fns_fusion_decay.py` first to download and unzip FNS benchmark files.'
@@ -22,7 +18,10 @@ chapters = []
 for element, experiments in data.items():
     filename = f"docs/{element}.md"
     with open(filename, 'w') as file:
-        file.write(f"# {element}\n\n")  # Title
+        if element in element_names.keys():
+            file.write(f"# {element} - {element_names[element]}\n\n")  # Title
+        else:
+            file.write(f"# {element}\n\n")  # Title
 
         for experiment in experiments:
             file.write(f"## {experiment}\n\n")  # Subtitle

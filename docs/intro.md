@@ -1,14 +1,12 @@
 # OpenMC depletion V&V.
 
-This is a book contains comparison of OpenMC depletion results with open benchmarks.
+This book presents a comprehensive comparison of OpenMC depletion calculations against established open benchmarks.
 
-Open benchmarks offer a higher level of reproducibility and ease of integration compared to closed benchmarks and are therefore the focus of this book. 
+Open benchmarks provide superior reproducibility and seamless integration capabilities compared to proprietary alternatives, making them the primary focus of this comparative study.
 
-Currently the [CoNDERC Dataset of FNS Fusion Decay-Heat Benchmark](https://www-nds.iaea.org/conderc/fusion/) produced by the IAEA is the main benchmark included.
+The analysis centers on the [CoNDERC Dataset from the IAEA’s FNS Fusion Decay-Heat Benchmark](https://www-nds.iaea.org/conderc/fusion/), which represents one of the most comprehensive validation datasets available in the field. This extensive benchmark suite encompasses experimental data from the irradiation of 69 individual elements and 4 composite materials across three distinct irradiation campaigns conducted at the FNS facility.
 
-CoNDERC is an extensive benchmark suit and the FNS Fusion Decay-Heat Benchmark dataset includes irradiation of 69 elements and 4 materials with three difference irradiation campaign at the FNS facility.
-
-The experimental results along with code to code comparisons can be found below. 
+The following chapters detail both the experimental results and systematic code-to-code comparisons, providing readers with thorough validation data for OpenMC’s depletion capabilities and insights into its performance relative to other computational approaches.
 
 ```{tableofcontents}
 ```
