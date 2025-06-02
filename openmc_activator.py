@@ -142,6 +142,8 @@ class OpenmcActivator:
                     for nuc_index, nuc in enumerate(nuclides):
                         if nuc not in nuclides_with_data:
                             continue
+                        if nuc not in material.get_nuclides():
+                            continue 
                         lib_nuc = openmc.lib.nuclides[nuc]
                         for mt_index, mt in enumerate(mts):
                             xs = lib_nuc.collapse_rate(
