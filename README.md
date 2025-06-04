@@ -10,5 +10,5 @@ This module is actually part of the Fusion Energy Reactor Models Integrator (FER
 
 # Contents
 1. `download_fns_fusion_decay.py`: Script to download and extract the FNS benchmark data files from website
-2. `compre.ipynb`: Jupyter notebook going through the process of using `OpenmcActivator` to reproduce FNS benchmark with OpenMC and comparing the results
+2. `compare.ipynb`: Jupyter notebook going through the process of using `OpenmcActivator` to reproduce FNS benchmark with OpenMC and comparing the results
 3. `openmc_activator.py`: Python class for standalone neutron source activation with OpenMC
