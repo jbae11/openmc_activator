@@ -177,3 +177,4 @@ fns.zip
 fns/
 _build/
 *.png
+compare.py

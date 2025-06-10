@@ -26,7 +26,6 @@ jobs:
         run: |
             conda install -c conda-forge "openmc>=0.15.2"
             python -m pip install -r requirements.txt
-            cd docs
             mkdir -p ~/nuclear_data
             wget -q -O - https://anl.box.com/shared/static/uhbxlrx7hvxqw27psymfbhi7bx7s6u6a.xz | tar -C ~/nuclear_data -xJ
             mv ~/nuclear_data/endfb-viii.0-hdf5/cross_sections.xml ~/nuclear_data
