@@ -176,3 +176,4 @@ cython_debug/
 fns.zip
 fns/
 _build/
+*.png
