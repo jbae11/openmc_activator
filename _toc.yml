@@ -4,6 +4,9 @@
 format: jb-book
 root: docs/intro
 parts:
+  - caption: Simulate
+    chapters:
+    - file: compare
   - caption: Materials
     chapters:
     - file: docs/Inc600
