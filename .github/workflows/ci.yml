@@ -29,6 +29,8 @@ jobs:
             cd docs
             mkdir -p ~/nuclear_data
             wget -q -O - https://anl.box.com/shared/static/uhbxlrx7hvxqw27psymfbhi7bx7s6u6a.xz | tar -C ~/nuclear_data -xJ
-            mv endfb-viii.0-hdf5/* ~/nuclear_data
+            mv ~/nuclear_data/endfb-viii.0-hdf5/cross_sections.xml ~/nuclear_data
+            mv ~/nuclear_data/endfb-viii.0-hdf5/photon ~/nuclear_data
+            mv ~/nuclear_data/endfb-viii.0-hdf5/neutron ~/nuclear_data
             jupyter nbconvert compare.ipynb --to python
             python compare.py
