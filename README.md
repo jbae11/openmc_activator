@@ -9,6 +9,5 @@ The module is tested on the [Fusion Neutron Source (FNS) Decay Heat Benchmark](h
 This module is actually part of the Fusion Energy Reactor Models Integrator (FERMI) [project](https://code.ornl.gov/4ib/fermi). A similar module exists for ORIGEN.
 
 # Contents
-1. `download_fns_fusion_decay.py`: Script to download and extract the FNS benchmark data files from website
-2. `compare.ipynb`: Jupyter notebook going through the process of using `OpenmcActivator` to reproduce FNS benchmark with OpenMC and comparing the results
-3. `openmc_activator.py`: Python class for standalone neutron source activation with OpenMC
+1. `compare.ipynb`: Jupyter notebook going through the process of using `OpenmcActivator` to reproduce FNS benchmark with OpenMC and comparing the results
+2. `openmc_activator.py`: Python class for standalone neutron source activation with OpenMC

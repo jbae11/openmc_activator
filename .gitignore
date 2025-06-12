@@ -173,5 +173,8 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 
-fnz.zip
+fns.zip
 fns/
+_build/
+*.png
+compare.py
