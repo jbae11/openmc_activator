@@ -6,7 +6,7 @@ import os, tempfile
 from typing import Sequence
 import openmc.checkvalue as cv
 from openmc.utility_funcs import change_directory
-from openmc.deplete.microxs import _get_nuclides_with_data, _find_cross_sections, _resolve_chain_file_path
+from openmc.deplete.microxs import _get_nuclides_with_data, _find_cross_sections
 from openmc.deplete import REACTION_MT, GROUP_STRUCTURES, Chain
 from typing import TypedDict
 
@@ -64,7 +64,7 @@ class OpenmcActivator:
             material = entry['materials']
             assert material.temperature is not None, 'Material temperature must be set before depletion'
 
-        chain_file_path = _resolve_chain_file_path(Path(self.chain_file)).resolve()
+        chain_file_path = Path(self.chain_file).resolve()
         chain = Chain.from_xml(chain_file_path)
 
         cross_sections = _find_cross_sections(model=None)
@@ -157,7 +157,7 @@ class OpenmcActivator:
                         micros=[micro_xs],
                         normalization_mode='source-rate',
                         reduce_chain_level=5,
-                        chain_file=chain_file_path
+                        chain_file=chain
                     )
 
                     integrator = openmc.deplete.PredictorIntegrator(
