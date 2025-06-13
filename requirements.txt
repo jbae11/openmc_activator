@@ -3,4 +3,5 @@ jupyter-book
 matplotlib
 numpy
 git+https://github.com/fispact/pypact
+# just a temporary solution to install OpenMC from this wheel till the next stable release of openmc
 https://github.com/shimwell/wheels/raw/refs/heads/main/openmc/openmc-0.15.3-cp312-cp312-manylinux_2_28_x86_64.whl
