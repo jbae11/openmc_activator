@@ -30,5 +30,7 @@ jobs:
             # TODO move to TENDL 2017 for a like ofr like comparison with fispact results
       - name: run notebook
         run: |
-            jupyter nbconvert compare.ipynb --to python
-            python compare.py
+            jupyter nbconvert --to notebook --execute compare.ipynb --inplace
+      - name: build jupyter-book
+        run: |
+            jupyter-book build .
