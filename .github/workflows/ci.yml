@@ -12,6 +12,9 @@ jobs:
   run_notebook:
     name: Run simulation notebook
     runs-on: "ubuntu-latest"
+    permissions:
+      pages: write
+      id-token: write
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
@@ -34,3 +37,14 @@ jobs:
       - name: build jupyter-book
         run: |
             jupyter-book build .
+
+      # Upload the book's HTML as an artifact
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "_build/html"
+
+      # Deploy the book's HTML to GitHub Pages
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
