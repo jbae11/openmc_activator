@@ -4,6 +4,12 @@
 format: jb-book
 root: docs/intro
 parts:
+  - caption: Install
+    chapters:
+    - file: docs/install
+  - caption: Getting Started
+    chapters:
+    - file: docs/getting_started
   - caption: Simulate
     chapters:
     - file: compare
