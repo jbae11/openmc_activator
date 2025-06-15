@@ -1,8 +1,13 @@
+[![Jupyter Book Badge](https://jupyterbook.org/badge.svg)](https://shimwell.github.io/openmc_activator/)
+
+
 [![CI testing](https://github.com/jbae11/openmc_activator/actions/workflows/ci.yml/badge.svg)](https://github.com/jbae11/openmc_activator/actions/workflows/ci.yml)
 
 # openmc_activator
 
 Standalone openmc activator to get activated composition from MG flux and irradiation scheme.
+
+See the online simulation results [here](https://shimwell.github.io/openmc_activator/) :link:
 
 The module is tested on the [Fusion Neutron Source (FNS) Decay Heat Benchmark](https://nds.iaea.org/conderc/fusion/)
 

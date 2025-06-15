@@ -23,7 +23,7 @@ jobs:
           python-version: "3.12"
       - name: setup environment
         run: python -m pip install -r requirements_3.12.txt
-      - name: downlaod nuclear data
+      - name: download nuclear data
         run: |
             mkdir -p ~/nuclear_data
             wget -q -O - https://anl.box.com/shared/static/uhbxlrx7hvxqw27psymfbhi7bx7s6u6a.xz | tar -C ~/nuclear_data -xJ
