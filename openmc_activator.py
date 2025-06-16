@@ -65,6 +65,13 @@ class OpenmcActivator:
             material = entry['materials']
             assert material.temperature is not None, 'Material temperature must be set before depletion'
 
+        if self.chain_file is None:
+            self.chain_file = openmc.config['chain_file']
+        if self.chain_file is None:
+            raise ValueError(
+                'Chain file must be specified either in the OpenMC config or '
+                'as an argument to OpenmcActivator'
+            )
         chain_file_path = Path(self.chain_file).resolve()
         chain = Chain.from_xml(chain_file_path)
 
