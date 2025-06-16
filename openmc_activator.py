@@ -155,7 +155,7 @@ class OpenmcActivator:
                     if Version(openmc.__version__) >= Version("0.15.3"):
                         chain_to_use = chain
                     else:
-                        # current sable release of OpenMC version 0.15.2 does
+                        # current stable release of OpenMC version 0.15.2 does
                         # not support preloaded chain files so we need to use
                         # the chain file path
                         chain_to_use = chain_file_path
