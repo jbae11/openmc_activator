@@ -9,13 +9,10 @@ cd openmc_activator
 
 Next install the Python packages that are needed to run the notebook. These can be installed from the [requirements file](https://github.com/jbae11/openmc_activator/blob/main/requirements.txt).
 
-This includes a development version of OpenMC from the current develop branch (13/June/2025)
+This includes a development version of OpenMC from [this branch](https://github.com/shimwell/openmc/tree/making-wheel-3) which allows Python wheels to be built.
 
-Pick the version of Python you have installed
 ```
-pip install -r requirements_3.10.txt
-pip install -r requirements_3.11.txt
-pip install -r requirements_3.12.txt
+pip install -r requirements.txt
 ```
 
 You could alternatively [install OpenMC from source (develop branch needed)](https://docs.openmc.org/en/stable/usersguide/install.html#installing-from-source) and install the remaining requirements with
