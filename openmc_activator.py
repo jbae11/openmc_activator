@@ -9,6 +9,7 @@ from openmc.utility_funcs import change_directory
 from openmc.deplete.microxs import _get_nuclides_with_data, _find_cross_sections
 from openmc.deplete import REACTION_MT, GROUP_STRUCTURES, Chain
 from typing import TypedDict
+from packaging.version import Version
 
 
 class ActivationDict(TypedDict):
@@ -151,13 +152,21 @@ class OpenmcActivator:
 
                     micro_xs = openmc.deplete.MicroXS(microxs_arr, nuclides, reactions)
 
+                    if Version(openmc.__version__) >= Version("0.15.3"):
+                        chain_to_use = chain
+                    else:
+                        # current sable release of OpenMC version 0.15.2 does
+                        # not support preloaded chain files so we need to use
+                        # the chain file path
+                        chain_to_use = chain_file_path
+
                     operator = openmc.deplete.IndependentOperator(
                         materials=openmc.Materials([material]),
                         fluxes=[material.volume],
                         micros=[micro_xs],
                         normalization_mode='source-rate',
                         reduce_chain_level=5,
-                        chain_file=chain
+                        chain_file=chain_to_use
                     )
 
                     integrator = openmc.deplete.PredictorIntegrator(
