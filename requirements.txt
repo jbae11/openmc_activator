@@ -6,3 +6,4 @@ numpy
 git+https://github.com/fispact/pypact
 moab
 openmc
+packaging
