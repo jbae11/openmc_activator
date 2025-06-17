@@ -1,5 +1,9 @@
+--extra-index-url https://shimwell.github.io/wheels
 jupyter
 jupyter-book
 matplotlib
 numpy
 git+https://github.com/fispact/pypact
+moab
+openmc
+packaging
