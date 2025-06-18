@@ -12,6 +12,9 @@ jobs:
   run_notebook:
     name: Run simulation notebook
     runs-on: "ubuntu-latest"
+    permissions:
+      pages: write
+      id-token: write
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
@@ -20,7 +23,7 @@ jobs:
           python-version: "3.12"
       - name: setup environment
         run: python -m pip install -r requirements.txt
-      - name: downlaod nuclear data
+      - name: download nuclear data
         run: |
             mkdir -p ~/nuclear_data
             wget -q -O - https://anl.box.com/shared/static/uhbxlrx7hvxqw27psymfbhi7bx7s6u6a.xz | tar -C ~/nuclear_data -xJ
@@ -30,5 +33,21 @@ jobs:
             # TODO move to TENDL 2017 for a like ofr like comparison with fispact results
       - name: run notebook
         run: |
-            jupyter nbconvert compare.ipynb --to python
-            python compare.py
+            jupyter nbconvert --to notebook --execute compare.ipynb --inplace
+      - name: build jupyter-book
+        run: |
+            jupyter-book build .
+
+      # Upload the book's HTML as an artifact
+      - name: Upload artifact
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "_build/html"
+          name: github-pages
+
+      # Deploy the book's HTML to GitHub Pages
+      - name: Deploy to GitHub Pages
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        id: deployment
+        uses: actions/deploy-pages@v4
