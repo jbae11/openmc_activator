@@ -216,7 +216,12 @@ def read_output(
 
     # get metrics
     # time is cumulative time
-    metric_dict = {metric: {'meta_time_%s' %timestep_units: np.cumsum([0] + list(timesteps))} for metric in metric_list}
+    metric_dict = {
+    metric: {
+            f'meta_time_{timestep_units}': [float(x) for x in np.cumsum([0] + list(timesteps))]
+        }
+        for metric in metric_list
+    }
     # add all the isos
     tmp_mat = results[0].get_material(str(material_id))
     for metric in metric_list:
@@ -243,7 +248,7 @@ def read_output(
                     metric_dict[metric][iso].append(0.0)
                 else:
                     metric_dict[metric][iso].append(td[iso])
-            metric_dict[metric]['meta_total'].append(sum(td.values()))
+            metric_dict[metric]['meta_total'].append(float(sum(td.values())))
 
     return metric_dict
 
