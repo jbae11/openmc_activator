@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Whan Bae"
+  given-names: "Jin"
+  orcid: "https://orcid.org/0000-0003-2654-8907"
+- family-names: "Shimwell"
+  given-names: "Jonathan"
+  orcid: "https://orcid.org/0000-0001-6909-0946"
+title: "OpenMC depletion V&V"
+version: 1.0.0
+date-released: 2025-06-20
+url: "https://github.com/jbae11/openmc_activator"
