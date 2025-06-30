@@ -36,7 +36,10 @@ html:
 exclude_patterns:
   - README
   - compare
+  - .new_env
 
 sphinx:
   config:
     html_extra_path: ['plotly_files']
+    html_theme_options:
+      show_navbar_depth: 2
