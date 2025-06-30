@@ -7,6 +7,14 @@ git clone git@github.com:jbae11/openmc_activator.git
 cd openmc_activator
 ```
 
+Optionally create a new virtual environment
+
+```bash
+sudo apt-get --yes install python3-venv
+python3 -m venv .new_env
+source .new_env/bin/activate
+```
+
 Next install the Python packages that are needed to run the notebook. These can be installed from the [requirements file](https://github.com/jbae11/openmc_activator/blob/main/requirements.txt).
 
 This includes a development version of OpenMC from [this branch](https://github.com/shimwell/openmc/tree/making-wheel-3) which allows Python wheels to be built.
