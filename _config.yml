@@ -36,3 +36,9 @@ html:
 exclude_patterns:
   - README
   - compare
+  - .new_env
+
+sphinx:
+  config:
+    html_theme_options:
+      show_navbar_depth: 2
