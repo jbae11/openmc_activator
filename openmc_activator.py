@@ -10,6 +10,7 @@ from openmc.deplete.microxs import _get_nuclides_with_data, _find_cross_sections
 from openmc.deplete import REACTION_MT, GROUP_STRUCTURES, Chain
 from typing import TypedDict
 from packaging.version import Version
+from openmc.data import ELEMENT_SYMBOL
 
 
 class ActivationDict(TypedDict):
@@ -252,3 +253,34 @@ def read_output(
 
     return metric_dict
 
+
+def write_markdown_file(
+    experiment_names: list[str],
+    material_name: str,
+):
+    """A small utility function to write the Jupyter Book markdown files for
+    each material irradiated:
+    """
+
+    element_names = {value: key for key, value in ELEMENT_SYMBOL.items()}
+
+    # Create docs directory if it doesn't exist
+    Path('docs').mkdir(exist_ok=True)
+    
+    filename = f'docs/{material_name}.md'
+        
+    with open(filename, 'w') as f:
+        # Write the material header
+        if material_name in element_names.keys():
+            
+            f.write(f'# {material_name} - {element_names[material_name]}\n\n')
+        else:
+            f.write(f'# {material_name}\n\n')
+        
+        # Write a section for each experiment
+        for exp in experiment_names:
+            f.write(f'## {exp}\n\n')
+
+            f.write(f'<iframe src="../../html/{material_name}_{exp}.html" width="100%" height="600px" frameborder="0"></iframe>\n\n')
+
+            f.write(f'![Alt text]({material_name}_{exp}.png)\n\n')
