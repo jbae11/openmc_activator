@@ -36,3 +36,7 @@ html:
 exclude_patterns:
   - README
   - compare
+
+sphinx:
+  config:
+    html_extra_path: ['plotly_files']
