@@ -292,3 +292,36 @@ def write_markdown_file(
             f.write(f'<iframe src="../{material_name}_{exp}.html" width="100%" height="600px" frameborder="0"></iframe>\n\n')
 
             f.write(f'![Alt text]({material_name}_{exp}.png)\n\n')
+
+
+def read_experimental_data(exp_file):
+    """
+    Read experimental data from file and filter out rows where all values are 0.
+    
+    Returns:
+        tuple: (minutes, values, uncertainties) without any zero rows
+    """
+    lines = open(exp_file).readlines()
+    
+    minutes = []
+    vals = []
+    unc = []
+    
+    for line in lines:
+        parts = line.strip().split()
+        if len(parts) != 3:
+            continue
+            
+        min_val = float(parts[0])
+        data_val = float(parts[1])
+        unc_val = float(parts[2])
+        
+        # Skip rows where all three values are effectively zero
+        if min_val == 0.0 and data_val == 0.0 and unc_val == 0.0:
+            continue
+            
+        minutes.append(min_val)
+        vals.append(data_val)
+        unc.append(unc_val)
+    
+    return (minutes, vals, unc)
