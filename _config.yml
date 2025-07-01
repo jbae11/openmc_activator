@@ -37,8 +37,10 @@ exclude_patterns:
   - README
   - compare
   - .new_env
+  - .pytest_cache
 
 sphinx:
   config:
+    html_extra_path: ['plotly_files']
     html_theme_options:
       show_navbar_depth: 2
