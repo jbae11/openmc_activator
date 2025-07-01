@@ -8,3 +8,4 @@ moab
 openmc
 packaging
 plotly
+git+https://github.com/fusion-neutronics/plotly_periodic_table
