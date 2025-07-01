@@ -281,6 +281,6 @@ def write_markdown_file(
         for exp in experiment_names:
             f.write(f'## {exp}\n\n')
 
-            f.write(f'<iframe src="../../html/{material_name}_{exp}.html" width="100%" height="600px" frameborder="0"></iframe>\n\n')
+            f.write(f'<iframe src="../{material_name}_{exp}.html" width="100%" height="600px" frameborder="0"></iframe>\n\n')
 
             f.write(f'![Alt text]({material_name}_{exp}.png)\n\n')
