@@ -251,6 +251,14 @@ def read_output(
                     metric_dict[metric][iso].append(td[iso])
             metric_dict[metric]['meta_total'].append(float(sum(td.values())))
 
+    # Clean up the dictionary by removing entries with all zeros
+    for metric in metric_dict.keys():
+        for iso in nuclides:                
+            # Check if all values are zeros
+            if all(abs(value) == 0.0 for value in metric_dict[metric][iso]):
+                # Remove entries that are all zeros
+                del metric_dict[metric][iso]
+
     return metric_dict
 
 
