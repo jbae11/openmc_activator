@@ -79,9 +79,6 @@ class OpenmcActivator:
         chain_file_path = Path(self.chain_file).resolve()
         chain = Chain.from_xml(chain_file_path)
 
-        cross_sections = _find_cross_sections(model=None)
-        nuclides_with_data = _get_nuclides_with_data(cross_sections)
-
         # If no nuclides were specified, default to all nuclides from the chain
         if not self.nuclides:
             nuclides = chain.nuclides
@@ -97,123 +94,45 @@ class OpenmcActivator:
             reactions = self.reactions
         mts = [REACTION_MT[name] for name in reactions]
 
-        # Create 3D array for microscopic cross sections
-        microxs_arr = np.zeros((len(nuclides), len(mts), 1))
-
-        # Create a material with all nuclides
-        mat_all_nucs = openmc.Material()
-        for nuc in nuclides:
-            if nuc in nuclides_with_data:
-                mat_all_nucs.add_nuclide(nuc, 1.0)
-        mat_all_nucs.set_density("atom/b-cm", 1.0)
-
-        # Create simple model containing the above material
-        surf1 = openmc.Sphere(boundary_type="vacuum")
-        surf1_cell = openmc.Cell(fill=mat_all_nucs, region=-surf1)
-        model = openmc.Model()
-        model.geometry = openmc.Geometry([surf1_cell])
-        model.settings = openmc.Settings(
-            particles=1, batches=1, output={'summary': False})
-
         with change_directory(tmpdir=True):
-            # Export model within temporary directory
-            model.export_to_model_xml()
 
-            with openmc.lib.run_in_memory(**self.init_kwargs):
-                # For each material, energy and multigroup flux compute the flux-averaged cross section for the nuclides and reactions
+            all_metric_dict = []
+            for entry in self.activation_data:
+                material = entry['materials']
+                multigroup_flux = entry['multigroup_flux']
+                energy = entry['energy']
+                source_rates = entry['source_rate']
+                timesteps = entry['timesteps']
 
-                all_metric_dict = []
-                for entry in self.activation_data:
-                    material = entry['materials']
-                    multigroup_flux = entry['multigroup_flux']
-                    energy = entry['energy']
-                    source_rates = entry['source_rate']
-                    timesteps = entry['timesteps']
+                depleted_materials = material.deplete(
+                    multigroup_flux=multigroup_flux,
+                    energy_group_structure=energy,
+                    timesteps=timesteps,
+                    source_rates=source_rates,
+                    timestep_units=self.timestep_units,
+                    chain_file=chain,
+                    reactions=reactions,
+                )
 
-                    # Normalize multigroup flux
-                    multigroup_flux = np.array(multigroup_flux)
-                    multigroup_flux /= multigroup_flux.sum()
-
-                    # check_type("temperature", temperature, (int, float))
-                    # if energy is string then use group structure of that name
-                    if isinstance(energy, str):
-                        energy = GROUP_STRUCTURES[energy]
-                    else:
-                        # if user inputs energy check they are ascending (low to high) as
-                        # some depletion codes use high energy to low energy.
-                        if not np.all(np.diff(energy) > 0):
-                            raise ValueError('Energy group boundaries must be in ascending order')
-
-                    # check dimension consistency
-                    if len(multigroup_flux) != len(energy) - 1:
-                        msg = 'Length of flux array should be len(energy)-1, but ' \
-                            f'got {len(multigroup_flux)} multigroup_flux entries ' \
-                            f'and {len(energy)} energy group boundaries'
-                        raise ValueError(msg)
-
-                    for nuc_index, nuc in enumerate(nuclides):
-                        if nuc not in nuclides_with_data:
-                            continue
-                        if nuc not in material.get_nuclides():
-                            continue 
-                        lib_nuc = openmc.lib.nuclides[nuc]
-                        for mt_index, mt in enumerate(mts):
-                            xs = lib_nuc.collapse_rate(
-                                mt, material.temperature, energy, multigroup_flux
-                            )
-                            microxs_arr[nuc_index, mt_index, 0] = xs
-
-                    micro_xs = openmc.deplete.MicroXS(microxs_arr, nuclides, reactions)
-
-                    if Version(openmc.__version__) >= Version("0.15.3"):
-                        chain_to_use = chain
-                    else:
-                        # current stable release of OpenMC version 0.15.2 does
-                        # not support preloaded chain files so we need to use
-                        # the chain file path
-                        chain_to_use = chain_file_path
-
-                    operator = openmc.deplete.IndependentOperator(
-                        materials=openmc.Materials([material]),
-                        fluxes=[material.volume],
-                        micros=[micro_xs],
-                        normalization_mode='source-rate',
-                        reduce_chain_level=5,
-                        chain_file=chain_to_use
-                    )
-
-                    integrator = openmc.deplete.PredictorIntegrator(
-                        operator=operator,
-                        timesteps=timesteps,
-                        source_rates=source_rates,
-                        timestep_units=self.timestep_units
-                    )
-
-                    integrator.integrate(path='temp_results.h5')
-
-                    metric_dict = read_output(
-                        output_path='temp_results.h5',
-                        nuclides=nuclides,
-                        metric_list=metric_list,
-                        timesteps=timesteps,
-                        material_id=material.id,
-                        timestep_units=self.timestep_units
-                    )
-                    all_metric_dict.append(metric_dict)
+                metric_dict = read_output(
+                    materials=depleted_materials,
+                    nuclides=nuclides,
+                    metric_list=metric_list,
+                    timesteps=timesteps,
+                    timestep_units=self.timestep_units
+                )
+                all_metric_dict.append(metric_dict)
         return all_metric_dict
                 
 
 
 def read_output(
-    output_path:str,
+    materials:openmc.Materials,
     nuclides,
     metric_list:list,
     timesteps:list,
-    material_id:str,
     timestep_units:str
 ):
-
-    results = openmc.deplete.ResultsList.from_hdf5(output_path)
 
     # get metrics
     # time is cumulative time
@@ -224,14 +143,11 @@ def read_output(
         for metric in metric_list
     }
     # add all the isos
-    tmp_mat = results[0].get_material(str(material_id))
     for metric in metric_list:
         metric_dict[metric]['meta_total'] = []
         for iso in nuclides:
             metric_dict[metric][iso] = []
-    for result in results:
-        mat = result.get_material(str(material_id))
-
+    for mat in materials:
         for metric in metric_dict.keys():
             if metric == 'mass':
                 td = {iso:mat.get_mass(iso) for iso in nuclides}
