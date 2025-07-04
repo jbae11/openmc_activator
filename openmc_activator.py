@@ -99,16 +99,12 @@ class OpenmcActivator:
             all_metric_dict = []
             for entry in self.activation_data:
                 material = entry['materials']
-                multigroup_flux = entry['multigroup_flux']
-                energy = entry['energy']
-                source_rates = entry['source_rate']
-                timesteps = entry['timesteps']
 
                 depleted_materials = material.deplete(
-                    multigroup_flux=multigroup_flux,
-                    energy_group_structure=energy,
-                    timesteps=timesteps,
-                    source_rates=source_rates,
+                    multigroup_flux=entry['multigroup_flux'],
+                    energy_group_structure=entry['energy'],
+                    timesteps=entry['timesteps'],
+                    source_rates=entry['source_rate'],
                     timestep_units=self.timestep_units,
                     chain_file=chain,
                     reactions=reactions,
@@ -118,7 +114,7 @@ class OpenmcActivator:
                     materials=depleted_materials,
                     nuclides=nuclides,
                     metric_list=metric_list,
-                    timesteps=timesteps,
+                    timesteps=entry['timesteps'],
                     timestep_units=self.timestep_units
                 )
                 all_metric_dict.append(metric_dict)
