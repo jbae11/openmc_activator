@@ -7,4 +7,4 @@ git+https://github.com/fispact/pypact
 openmc
 packaging
 plotly
-git+https://github.com/fusion-neutronics/plotly_periodic_table
+git+https://github.com/shimwell/plotly_periodic_table
