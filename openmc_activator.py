@@ -97,6 +97,7 @@ class OpenmcActivator:
         with change_directory(tmpdir=True):
 
             all_metric_dict = []
+
             for entry in self.activation_data:
                 material = entry['materials']
 
