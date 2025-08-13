@@ -94,31 +94,32 @@ class OpenmcActivator:
             reactions = self.reactions
         mts = [REACTION_MT[name] for name in reactions]
 
-        with change_directory(tmpdir=True):
+        with openmc.lib.TemporarySession() as session:
+            with change_directory(tmpdir=True):
 
-            all_metric_dict = []
+                all_metric_dict = []
 
-            for entry in self.activation_data:
-                material = entry['materials']
+                for entry in self.activation_data:
+                    material = entry['materials']
 
-                depleted_materials = material.deplete(
-                    multigroup_flux=entry['multigroup_flux'],
-                    energy_group_structure=entry['energy'],
-                    timesteps=entry['timesteps'],
-                    source_rates=entry['source_rate'],
-                    timestep_units=self.timestep_units,
-                    chain_file=chain,
-                    reactions=reactions,
-                )
+                    depleted_materials = material.deplete(
+                        multigroup_flux=entry['multigroup_flux'],
+                        energy_group_structure=entry['energy'],
+                        timesteps=entry['timesteps'],
+                        source_rates=entry['source_rate'],
+                        timestep_units=self.timestep_units,
+                        chain_file=chain,
+                        reactions=reactions,
+                    )
 
-                metric_dict = read_output(
-                    materials=depleted_materials,
-                    nuclides=nuclides,
-                    metric_list=metric_list,
-                    timesteps=entry['timesteps'],
-                    timestep_units=self.timestep_units
-                )
-                all_metric_dict.append(metric_dict)
+                    metric_dict = read_output(
+                        materials=depleted_materials,
+                        nuclides=nuclides,
+                        metric_list=metric_list,
+                        timesteps=entry['timesteps'],
+                        timestep_units=self.timestep_units
+                    )
+                    all_metric_dict.append(metric_dict)
         return all_metric_dict
                 
 
