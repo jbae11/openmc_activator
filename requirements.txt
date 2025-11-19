@@ -3,7 +3,7 @@ jupyter
 jupyter-book
 matplotlib
 numpy
-git+https://github.com/fispact/pypact
+pypact
 openmc
 packaging
 plotly
