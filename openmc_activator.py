@@ -41,7 +41,7 @@ class OpenmcActivator:
         self,
         activation_data: Sequence[ActivationDict],
         timestep_units: str = 's',
-        reduce_chain_level: int = 5,
+        reduce_chain_level: int = 2,
         chain_file: cv.PathLike | None = None,
         nuclides: Sequence[str] | None = None,
         reactions: Sequence[str] | None = None, 
