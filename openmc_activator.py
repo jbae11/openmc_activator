@@ -108,7 +108,7 @@ class OpenmcActivator:
                         timesteps=entry['timesteps'],
                         source_rates=entry['source_rate'],
                         timestep_units=self.timestep_units,
-                        chain_file=chain,
+                        chain_file=chain.reduce(material.get_nuclides(), self.reduce_chain_level),
                         reactions=reactions,
                     )
 
